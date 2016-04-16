@@ -55,8 +55,8 @@ typedef enum
 /*				        	      UART								          */
 /******************************************************************************/
 
-/*						   (MODE,				 BAUD,		PARITY,		STOP_BIT,	DATA_SIZE,	CLK_POLARITY,	FIFO_SIZE,  FRAME_TIMEOUT ) */
-#define USART_DEF	X_USART(normal_asynchronous, baud_9600,	parity_none,stop_bit_1,char_size_8,NULL,			128,		40            )
+/*						   (MODE,				 BAUD,		PARITY,		STOP_BIT,	DATA_SIZE,		CLK_POLARITY,					FIFO_SIZE,  FRAME_TIMEOUT ) */
+#define USART_DEF	X_USART(normal_asynchronous, baud_9600,	parity_none,stop_bit_1,	char_size_8, 	clock_polarity_rising,			128,		40            )
 
 /******************************************************************************/
 /*				        		  TIMER							              */

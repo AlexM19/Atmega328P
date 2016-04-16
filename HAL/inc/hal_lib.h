@@ -7,6 +7,7 @@
 #include <avr/interrupt.h>
 #include <avr/io.h>
 #include <util/delay.h>
+#include <util/twi.h>
 /* C Library */
 #include <stdio.h>
 #include <stdint.h>
@@ -20,6 +21,7 @@
 #include "keypad.h"
 #include "timer.h"
 #include "piezo.h"
+#include "spi.h"
 
 /* Define ------------------------------------------------------------------- */
 /* Exported macro ----------------------------------------------------------- */

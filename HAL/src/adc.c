@@ -19,7 +19,7 @@ static chanInfo_t xChanInfo[HAL_ADC_NUM_OF_CHAN] =
 static adcInfo_t xAdcInfo =
 {
 	#define X_ADC(CLOCKDIV)\
-				  {CLOCKDIV},
+				  CLOCKDIV,
 		ADC_DEF
 	#undef X_ADC
 };
