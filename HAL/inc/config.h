@@ -61,7 +61,7 @@ typedef enum
 /******************************************************************************/
 /*				        		  TIMER							              */
 /******************************************************************************/
-#define TIM_DEF				/* Comment if not timer is used  */
+#define TIM_DEF				/* Comment if no timer is used  */
 #define USE_SYS_TICK		/* Comment if for no system tick */
 #define SYS_TICK_TIMER		eTim0
 #define SYS_TICK_INT		eOCFxAInterrupt
@@ -74,5 +74,9 @@ typedef enum
 /*							(COLUNM1_PIN, 	COLUNM2_PIN, 	COLUNM3_PIN,  ROW1_PIN, 	ROW2_PIN, 	ROW3_PIN, 	ROW4_PIN) */
 #define KEYPAD_DEF	X_KEYPAD(KEYPAD3,		KEYPAD1,		KEYPAD5,	  KEYPAD2,		KEYPAD7,	KEYPAD6,	KEYPAD7 )
 
+/******************************************************************************/
+/*				       			  LCD						 	 	      	  */
+/******************************************************************************/
+#define LCD_DEF		x_LCD(RS_PIN, E_PIN, RW_PIN, PB0, PB1, PB2, PB3, PB4, PB5, PB6, PB7)
 
 #endif /* HAL_INC_CONFIG_H_ */
