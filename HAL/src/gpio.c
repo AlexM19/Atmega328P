@@ -35,10 +35,10 @@ void vGpioConfigPin(eHalGpioId_t eId)
 	switch(xPinInfo[eId].xMode)
 	{
 		case eInputModePu:
-			reset_register_bit(*xPinInfo[eId].ucDDRx,ucPinMask);
-			set_register_bit(*xPinInfo[eId].ucPORTx,ucPinMask);
 			/*Make sure the pull up are not disable in the MCU control register */
 			MCUCR &= ~(1<<PUD);
+			reset_register_bit(*xPinInfo[eId].ucDDRx,ucPinMask);
+			set_register_bit(*xPinInfo[eId].ucPORTx,ucPinMask);
 			break;
 		case eInputModeNoPu:
 			reset_register_bit(*xPinInfo[eId].ucDDRx,ucPinMask);

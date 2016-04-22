@@ -14,16 +14,23 @@
 #include "hal_lib.h"
 
 /* Define ------------------------------------------------------------------- */
-#define NUM_DATA_PIN	8
+#define LCD_MAX_DATA_PIN	8
 /* Exported macro ----------------------------------------------------------- */
 /* Exported enum ------------------------------------------------------------ */
+typedef enum
+{
+	eMode4bData,
+	eMode8bData,
+}eLcdMode_t;
+
 /* Exported struct ---------------------------------------------------------- */
 typedef struct
 {
+	eLcdMode_t		eLcdMode;
 	PinDescriptor_t xEnablePin;
 	PinDescriptor_t	xReadWritePin;
 	PinDescriptor_t	xRegisterPin;
-	PinDescriptor_t	xDataPin[NUM_DATA_PIN];
+	PinDescriptor_t	xDataPin[LCD_MAX_DATA_PIN];
 }lcdInfo_t;
 
 /* Global variables --------------------------------------------------------- */

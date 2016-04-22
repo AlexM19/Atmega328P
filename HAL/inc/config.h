@@ -77,6 +77,6 @@ typedef enum
 /******************************************************************************/
 /*				       			  LCD						 	 	      	  */
 /******************************************************************************/
-#define LCD_DEF		x_LCD(RS_PIN, E_PIN, RW_PIN, PB0, PB1, PB2, PB3, PB4, PB5, PB6, PB7)
+#define LCD_DEF		x_LCD(eMode8bData, RS_PIN, E_PIN, RW_PIN, PB0, PB1, PB2, PB3, PB4, PB5, PB6, PB7)
 
 #endif /* HAL_INC_CONFIG_H_ */

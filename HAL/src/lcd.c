@@ -1,10 +1,12 @@
 /*******************************************************************************
   * @file			lcd.c
-  * @brief			
-  * @description
+  * @brief			Lcd driver based around the Hitachi HD44780U
+  * @description	This module provide basic functionalities for LCD display that use
+  *					the dot matrix liquid crystal display controller Hitachi HD44780U.
   * @author			Alexandre Mercier
   * @date			Apr 18, 2016
-  * @note
+  * @note			By default all the pin are set to output. In function like read status
+  *					they will me switch to input and then revert back to output mode.
   *****************************************************************************/
 
 /* Includes ------------------------------------------------------------------*/
@@ -18,7 +20,8 @@
 /* Private variables ---------------------------------------------------------*/
 static lcdInfo_t xLcdInfo =
 {
-	#define X_LCD(RS_PIN, E_PIN, RW_PIN, PB0, PB1, PB2, PB3, PB4, PB5, PB6, PB7)\
+	#define X_LCD(MODE, RS_PIN, E_PIN, RW_PIN, PB0, PB1, PB2, PB3, PB4, PB5, PB6, PB7)\
+				  MODE,					\
 				  RS_PIN,				\
 				  E_PIN, 				\
 				  RW_PIN,				\
@@ -33,9 +36,11 @@ static lcdInfo_t xLcdInfo =
 		LCD_DEF
 	#undef X_LCD
 };
+
+static uint8_t ucLcdNumDataPin;
 /* External variables --------------------------------------------------------*/
 /* Private function prototypes -----------------------------------------------*/
-uint8_t prvLcdIsBusy(void);
+void prvLcdWaitUntilNotBusy(void)
 void prvLcdClearDisplay(void);
 void prvLcdResetCursor(void);
 void prvLcdSetEntryMode(uint8_t ucIncrement, uint8_t ucShift);
@@ -48,20 +53,62 @@ void prvLcdSetCGRAM(uint8_t ucAddrs);
 void prvLcdWriteData(uint8_t ucData);
 
 /* Private functions ---------------------------------------------------------*/
-uint8_t prvLcdIsBusy(void)
+void prvLcdWaitUntilNotBusy(void)
 {
+	ePinState_t eBusyFlag = ePinHigh;
+	
+	/*Set data pin 7 as input */
+	vGpioSetPinMode(xLcdInfo.xDataPin[7].ucID,eInputModeNoPu);
+	
+	/*Reset register pin */
+	vGpioSetPinState(xLcdInfo.xRegisterPin.ucID, ePinLow);
+	
+	/*Set Read/write pin */
+	vGpioSetPinState(xLcdInfo.xReadWritePin.ucID, ePinHigh);
+	
+	do
+	{
+		/*Set Enable pin */
+		vGpioSetPinState(xLcdInfo.xEnablePin.ucID, ePinHigh);
+	
+		/*Read the data pin 7*/
+		eBusyFlag = eGpioReadPinState(xLcdInfo.xDataPin[7].ucID);
+	
+		/*Reset Enable pin */
+		vGpioSetPinState(xLcdInfo.xEnablePin.ucID, ePinLow);
+		
+	}
+	while(eBusyFlag == ePinHigh)
+		
+	/*Set data pin 7 as output */
+	vGpioSetPinMode(xLcdInfo.xDataPin[7].ucID,eOutputMode);
 
-	return 0;
+	
+
 }
 
 void prvLcdClearDisplay(void)
 {
+	/*Wait until the LCD is not busy*/
+	prvLcdWaitUntilNotBusy();
+	
 	/*Reset register pin */
-	/*Set the read/write pin*/
-	/*Set PB1*/
+	vGpioSetPinState(xLcdInfo.xRegisterPin.ucID, ePinLow);
+		
+	/*Reset the read/write pin*/
+	vGpioSetPinState(xLcdInfo.xReadWritePin.ucID, ePinLow);
+	
+	/*Set Data pin 0*/
+	vGpioSetPinState(xLcdInfo.xDataPin[0].ucID, ePinHigh);
+	
 	/*Set Enable pin*/
+	vGpioSetPinState(xLcdInfo.xEnablePin.ucID, ePinHigh);
+	
 	/*Reset enable pin */
-	/*Reset PB1*/
+	vGpioSetPinState(xLcdInfo.xEnablePin.ucID, ePinLow);
+	
+	/*Reset Data pin 0*/
+	vGpioSetPinState(xLcdInfo.xDataPin[0].ucID, ePinLow);
 }
 
 void prvLcdResetCursor(void)
@@ -113,10 +160,21 @@ void prvLcdWriteData(uint8_t ucData)
 
 void LcdInit(void)
 {
+	uint8_t uci;
+	
+	/*Set the number of data pin*/
+	if(xLcdInfo.eLcdMode == eMode4bData)
+		ucLcdNumDataPin = 4;
+	else
+		ucLcdNumDataPin = 8;
+	
 	/*Set pins mode*/
 	vGpioSetPinMode(xLcdInfo.xEnablePin.ucID, eOutputMode);
 	vGpioSetPinMode(xLcdInfo.xRegisterPin.ucID, eOutputMode);
 	vGpioSetPinMode(xLcdInfo.xReadWritePin.ucID, eOutputMode);
+	
+	for(uci = 0; uci < ucLcdNumDataPin; uci++)
+		vGpioSetPinMode(xLcdInfo.xDataPin[uci].ucID, eOutputMode);
 
 }
 
